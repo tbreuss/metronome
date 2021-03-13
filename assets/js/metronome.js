@@ -1,6 +1,5 @@
 var audioContext = null;
 var isPlaying = false;      // Are we currently playing?
-var startTime;              // The start time of the entire sequence.
 var currentTwelveletNote;        // What note is currently last scheduled?
 var tempo = 120.0;          // tempo (in beats per minute)
 var meter = 4;
@@ -17,8 +16,6 @@ var scheduleAheadTime = 0.1;    // How far ahead to schedule audio (sec)
                             // with next interval (in case the timer is late)
 var nextNoteTime = 0.0;     // when the next note is due.
 var noteLength = 0.05;      // length of "beep" (in seconds)
-var notesInQueue = [];      // the notes that have been put into the web audio,
-                            // and may or may not have played yet. {note, time}
 var timerWorker = null;     // The Web Worker used to fire timer messages
 
 function maxBeats() {
@@ -41,8 +38,6 @@ function calcVolume(beatVolume) {
 }
 
 function scheduleNote(beatNumber, time) {
-  // push the note on the queue, even if we're not playing.
-  notesInQueue.push({ note: beatNumber, time: time });
 
   // create oscillator & gainNode & connect them to the context destination
   var osc = audioContext.createOscillator();
